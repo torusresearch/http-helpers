@@ -28,7 +28,7 @@ export const promiseTimeout = (ms, promise) => {
   return Promise.race([promise, timeout])
 }
 
-export const post = (url = '', data = {}, options_ = {}, useAPIKey = false) => {
+export const post = (url, data = {}, options_ = {}, useAPIKey = false) => {
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
@@ -52,7 +52,7 @@ export const post = (url = '', data = {}, options_ = {}, useAPIKey = false) => {
   )
 }
 
-export const remove = (url = '', _data = {}, options_ = {}, useAPIKey = false) => {
+export const remove = (url, _data = {}, options_ = {}, useAPIKey = false) => {
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
@@ -72,7 +72,7 @@ export const remove = (url = '', _data = {}, options_ = {}, useAPIKey = false) =
   })
 }
 
-export const get = (url = '', options_ = {}, useAPIKey = false) => {
+export const get = (url, options_ = {}, useAPIKey = false) => {
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
@@ -90,7 +90,7 @@ export const get = (url = '', options_ = {}, useAPIKey = false) => {
   })
 }
 
-export const patch = (url = '', data = {}, options_ = {}, useAPIKey = false) => {
+export const patch = (url, data = {}, options_ = {}, useAPIKey = false) => {
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
