@@ -3,6 +3,7 @@ import * as loglevel from 'loglevel'
 const log = loglevel.getLogger('http-helpers')
 
 let apiKey = 'torus-default'
+
 export const gatewayAuthHeader = 'x-api-key'
 export function setAPIKey(a) {
   apiKey = a
@@ -36,7 +37,7 @@ export const post = (url = '', data = {}, options_ = {}, useAPIKey = false) => {
     body: options_.isUrlEncodedData ? data : JSON.stringify(data),
   }
   if (useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: apiKey }
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
   const options = {
     ...defaultOptions,
@@ -63,7 +64,7 @@ export const remove = (url = '', _data = {}, options_ = {}, useAPIKey = false) =
     },
   }
   if (useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: apiKey }
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
   const options = {
     ...defaultOptions,
@@ -85,7 +86,7 @@ export const get = (url = '', options_ = {}, useAPIKey = false) => {
     headers: {},
   }
   if (useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: apiKey }
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
   const options = {
     ...defaultOptions,
@@ -110,7 +111,7 @@ export const patch = (url = '', data = {}, options_ = {}, useAPIKey = false) => 
     body: JSON.stringify(data),
   }
   if (useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: apiKey }
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
   const options = {
     ...defaultOptions,
