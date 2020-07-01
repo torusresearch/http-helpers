@@ -6,7 +6,7 @@ const pkgName = 'httpHelpers'
 const libraryName = pkgName.charAt(0).toUpperCase() + pkgName.slice(1)
 
 const baseConfig = {
-  mode: 'production',
+  mode: 'development',
   entry: './index.js',
   target: 'web',
   output: {
@@ -20,6 +20,7 @@ const baseConfig = {
   node: {
     vm: 'empty',
   },
+  devtool: 'source-map',
 }
 
 const optimization = {

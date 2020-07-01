@@ -20,6 +20,7 @@
     "@babel/runtime": "^7.10.3"
   },
   "dependencies": {
+    "deepmerge": "^4.2.2",
     "loglevel": "^1.6.8"
   },
   "devDependencies": {

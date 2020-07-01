@@ -1,4 +1,5 @@
-import * as loglevel from 'loglevel'
+import deepmerge from 'deepmerge'
+import loglevel from 'loglevel'
 
 const log = loglevel.getLogger('http-helpers')
 
@@ -39,11 +40,7 @@ export const post = (url = '', data = {}, options_ = {}, useAPIKey = false) => {
   if (useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
-  const options = {
-    ...defaultOptions,
-    ...options_,
-    ...{ method: 'POST' },
-  }
+  const options = deepmerge.all([defaultOptions, options_, { method: 'POST' }])
   return promiseTimeout(
     30000,
     fetch(url, options).then((response) => {
@@ -66,11 +63,7 @@ export const remove = (url = '', _data = {}, options_ = {}, useAPIKey = false) =
   if (useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
-  const options = {
-    ...defaultOptions,
-    ...options_,
-    ...{ method: 'DELETE' },
-  }
+  const options = deepmerge.all([defaultOptions, options_, { method: 'DELETE' }])
   return fetch(url, options).then((response) => {
     if (response.ok) {
       return response.json()
@@ -88,11 +81,7 @@ export const get = (url = '', options_ = {}, useAPIKey = false) => {
   if (useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
-  const options = {
-    ...defaultOptions,
-    ...options_,
-    ...{ method: 'GET' },
-  }
+  const options = deepmerge.all([defaultOptions, options_, { method: 'GET' }])
   return fetch(url, options).then((response) => {
     if (response.ok) {
       return response.json()
@@ -113,11 +102,7 @@ export const patch = (url = '', data = {}, options_ = {}, useAPIKey = false) => 
   if (useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
-  const options = {
-    ...defaultOptions,
-    ...options_,
-    ...{ method: 'PATCH' },
-  }
+  const options = deepmerge.all([defaultOptions, options_, { method: 'PATCH' }])
   return fetch(url, options).then((response) => {
     if (response.ok) {
       return response.json()

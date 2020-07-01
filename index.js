@@ -1,3 +1,1 @@
-import * as HttpHelpers from './src/httpHelpers'
-
-export default HttpHelpers
+export * from './src/httpHelpers'
