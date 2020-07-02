@@ -60,7 +60,7 @@ export const post = (url, data = {}, options_ = {}, customOptions = {}) => {
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'POST' }])
   return promiseTimeout(
-    30000,
+    customOptions.timeout || 30000,
     fetch(url, options).then((response) => {
       if (response.ok) {
         return response.json()
@@ -118,7 +118,7 @@ export const generateJsonRPCObject = (method, parameters) => ({
   params: parameters,
 })
 
-export const promiseRace = (url, options, timeout) => {
+export const promiseRace = (url, options, timeout = 30000) => {
   log.info('promise race', url)
   return Promise.race([
     get(url, options),
