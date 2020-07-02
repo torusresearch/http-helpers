@@ -1,3 +1,4 @@
+export as namespace HttpHelpers
 declare function getAPIKey(): string;
 declare function setAPIKey(a: string)
 declare function clearAPIKey()
@@ -14,3 +15,5 @@ declare function remove(url: RequestInfo, data?: Data, options?: RequestInit, cu
 interface RPCParams {}
 declare function generateJsonRPCObject(method: string, params: RPCParams)
 declare function promiseRace(url: string, options?: RequestInit, timeout: Number)
+
+export = HttpHelpers
