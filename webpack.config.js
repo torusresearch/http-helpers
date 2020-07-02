@@ -7,7 +7,7 @@ const libraryName = pkgName.charAt(0).toUpperCase() + pkgName.slice(1)
 
 const baseConfig = {
   mode: 'development',
-  entry: './index.js',
+  entry: './src/httpHelpers.js',
   target: 'web',
   output: {
     path: path.resolve(__dirname, 'dist'),
