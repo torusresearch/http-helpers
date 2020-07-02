@@ -1,13 +1,13 @@
 import deepmerge from 'deepmerge'
 import loglevel from 'loglevel'
 
-const log = loglevel.getLogger('http-helpers')
+export const log = loglevel.getLogger('http-helpers')
 
 let apiKey = 'torus-default'
 
 export const gatewayAuthHeader = 'x-api-key'
-export function setAPIKey(a) {
-  apiKey = a
+export function setAPIKey(apiKey_) {
+  apiKey = apiKey_
 }
 
 export function clearAPIKey() {
