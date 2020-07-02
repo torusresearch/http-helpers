@@ -28,16 +28,34 @@ export const promiseTimeout = (ms, promise) => {
   return Promise.race([promise, timeout])
 }
 
-export const post = (url, data = {}, options_ = {}, useAPIKey = false) => {
+export const get = (url, options_ = {}, customOptions = {}) => {
+  const defaultOptions = {
+    mode: 'cors',
+    cache: 'no-cache',
+    headers: {},
+  }
+  if (customOptions.useAPIKey) {
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
+  }
+  const options = deepmerge.all([defaultOptions, options_, { method: 'GET' }])
+  return fetch(url, options).then((response) => {
+    if (response.ok) {
+      return response.json()
+    }
+    throw response
+  })
+}
+
+export const post = (url, data = {}, options_ = {}, customOptions = {}) => {
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
     },
-    body: options_.isUrlEncodedData ? data : JSON.stringify(data),
+    body: customOptions.isUrlEncodedData ? data : JSON.stringify(data),
   }
-  if (useAPIKey) {
+  if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'POST' }])
@@ -52,45 +70,7 @@ export const post = (url, data = {}, options_ = {}, useAPIKey = false) => {
   )
 }
 
-export const remove = (url, _data = {}, options_ = {}, useAPIKey = false) => {
-  const defaultOptions = {
-    mode: 'cors',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-  }
-  if (useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
-  }
-  const options = deepmerge.all([defaultOptions, options_, { method: 'DELETE' }])
-  return fetch(url, options).then((response) => {
-    if (response.ok) {
-      return response.json()
-    }
-    throw response
-  })
-}
-
-export const get = (url, options_ = {}, useAPIKey = false) => {
-  const defaultOptions = {
-    mode: 'cors',
-    cache: 'no-cache',
-    headers: {},
-  }
-  if (useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
-  }
-  const options = deepmerge.all([defaultOptions, options_, { method: 'GET' }])
-  return fetch(url, options).then((response) => {
-    if (response.ok) {
-      return response.json()
-    }
-    throw response
-  })
-}
-
-export const patch = (url, data = {}, options_ = {}, useAPIKey = false) => {
+export const patch = (url, data = {}, options_ = {}, customOptions = {}) => {
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
@@ -99,10 +79,30 @@ export const patch = (url, data = {}, options_ = {}, useAPIKey = false) => {
     },
     body: JSON.stringify(data),
   }
-  if (useAPIKey) {
+  if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'PATCH' }])
+  return fetch(url, options).then((response) => {
+    if (response.ok) {
+      return response.json()
+    }
+    throw response
+  })
+}
+
+export const remove = (url, _data = {}, options_ = {}, customOptions = {}) => {
+  const defaultOptions = {
+    mode: 'cors',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+  }
+  if (customOptions.useAPIKey) {
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
+  }
+  const options = deepmerge.all([defaultOptions, options_, { method: 'DELETE' }])
   return fetch(url, options).then((response) => {
     if (response.ok) {
       return response.json()
