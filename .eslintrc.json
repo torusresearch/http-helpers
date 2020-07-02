@@ -18,8 +18,6 @@
     "ecmaVersion": 9
   },
   "rules": {
-    "promise/catch-or-return": [2, { "allowFinally": true }],
-    "no-bitwise": 0,
     "no-restricted-syntax": 0,
     "simple-import-sort/sort": "error",
     "operator-linebreak": 0,

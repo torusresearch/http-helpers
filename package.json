@@ -3,8 +3,6 @@
   "version": "1.2.0",
   "description": "http helpers",
   "main": "dist/httpHelpers.cjs.js",
-  "unpkg": "dist/httpHelpers.umd.min.js",
-  "jsdelivr": "dist/httpHelpers.umd.min.js",
   "types": "types/httpHelpers.d.ts",
   "scripts": {
     "build": "rimraf dist/ && parallel-webpack --no-stats",
@@ -17,7 +15,7 @@
     "types"
   ],
   "peerDependencies": {
-    "@babel/runtime": "^7.10.3"
+    "@babel/runtime": "7.x"
   },
   "dependencies": {
     "deepmerge": "^4.2.2",
