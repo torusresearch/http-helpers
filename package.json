@@ -1,6 +1,6 @@
 {
   "name": "@toruslabs/http-helpers",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "http helpers",
   "main": "dist/httpHelpers.cjs.js",
   "unpkg": "dist/httpHelpers.umd.min.js",
