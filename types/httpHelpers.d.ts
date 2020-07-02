@@ -1,9 +1,9 @@
-import Logger from 'loglevel'
+import loglevel from 'loglevel'
 export function getAPIKey(): string;
 export function setAPIKey(apiKey_: string)
 export function clearAPIKey()
 export function promiseTimeout<T>(ms:Number, promise: Promise<T>): Promise<T>
-export const log: Logger
+export const log: loglevel.Logger
 
 interface CustomOptions {
     useAPIKey?: boolean;
