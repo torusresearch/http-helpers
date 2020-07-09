@@ -4,8 +4,23 @@ import loglevel from 'loglevel'
 export const log = loglevel.getLogger('http-helpers')
 
 let apiKey = 'torus-default'
+let embedHost = ''
 
 export const gatewayAuthHeader = 'x-api-key'
+export const gatewayEmbedHostHeader = 'x-embed-host'
+
+export function setEmbedHost(embedHost_) {
+  embedHost = embedHost_
+}
+
+export function clearEmbedHost() {
+  embedHost = ''
+}
+
+export function getEmbedHost() {
+  return embedHost
+}
+
 export function setAPIKey(apiKey_) {
   apiKey = apiKey_
 }
@@ -35,7 +50,7 @@ export const get = (url, options_ = {}, customOptions = {}) => {
     headers: {},
   }
   if (customOptions.useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey(), [gatewayEmbedHostHeader]: getEmbedHost() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'GET' }])
   return fetch(url, options).then((response) => {
@@ -56,7 +71,7 @@ export const post = (url, data = {}, options_ = {}, customOptions = {}) => {
     body: customOptions.isUrlEncodedData ? data : JSON.stringify(data),
   }
   if (customOptions.useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey(), [gatewayEmbedHostHeader]: getEmbedHost() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'POST' }])
   return promiseTimeout(
@@ -80,7 +95,7 @@ export const patch = (url, data = {}, options_ = {}, customOptions = {}) => {
     body: JSON.stringify(data),
   }
   if (customOptions.useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey(), [gatewayEmbedHostHeader]: getEmbedHost() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'PATCH' }])
   return fetch(url, options).then((response) => {
@@ -100,7 +115,7 @@ export const remove = (url, _data = {}, options_ = {}, customOptions = {}) => {
     },
   }
   if (customOptions.useAPIKey) {
-    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey() }
+    defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey(), [gatewayEmbedHostHeader]: getEmbedHost() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'DELETE' }])
   return fetch(url, options).then((response) => {
