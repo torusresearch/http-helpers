@@ -6,7 +6,7 @@ const pkgName = 'httpHelpers'
 const libraryName = pkgName.charAt(0).toUpperCase() + pkgName.slice(1)
 
 const baseConfig = {
-  mode: 'development',
+  mode: 'production',
   entry: './src/httpHelpers.js',
   target: 'web',
   output: {
@@ -19,7 +19,6 @@ const baseConfig = {
   node: {
     vm: 'empty',
   },
-  devtool: 'source-map',
 }
 
 const optimization = {
@@ -44,30 +43,6 @@ const babelLoaderWithPolyfills = {
 }
 
 const babelLoader = { ...babelLoaderWithPolyfills, use: { loader: 'babel-loader', options: { plugins: ['@babel/transform-runtime'] } } }
-
-const umdPolyfilledConfig = {
-  ...baseConfig,
-  output: {
-    ...baseConfig.output,
-    filename: `${pkgName}.polyfill.umd.min.js`,
-    libraryTarget: 'umd',
-  },
-  module: {
-    rules: [eslintLoader, babelLoaderWithPolyfills],
-  },
-}
-
-const umdConfig = {
-  ...baseConfig,
-  output: {
-    ...baseConfig.output,
-    filename: `${pkgName}.umd.min.js`,
-    libraryTarget: 'umd',
-  },
-  module: {
-    rules: [eslintLoader, babelLoader],
-  },
-}
 
 const cjsConfig = {
   ...baseConfig,
@@ -102,7 +77,7 @@ const nodeConfig = {
   ],
 }
 
-module.exports = [umdPolyfilledConfig, umdConfig, cjsConfig, nodeConfig]
+module.exports = [cjsConfig, nodeConfig]
 // module.exports = [cjsConfig]
 
 // V5

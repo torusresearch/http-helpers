@@ -6,6 +6,7 @@ export const log = loglevel.getLogger('http-helpers')
 let apiKey = 'torus-default'
 let embedHost = ''
 
+// #region API Keys
 export const gatewayAuthHeader = 'x-api-key'
 export const gatewayEmbedHostHeader = 'x-embed-host'
 
@@ -32,6 +33,7 @@ export function clearAPIKey() {
 export function getAPIKey() {
   return apiKey
 }
+// #endregion
 
 export const promiseTimeout = (ms, promise) => {
   const timeout = new Promise((resolve, reject) => {
@@ -43,7 +45,7 @@ export const promiseTimeout = (ms, promise) => {
   return Promise.race([promise, timeout])
 }
 
-export const get = (url, options_ = {}, customOptions = {}) => {
+export const get = async (url, options_ = {}, customOptions = {}) => {
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
@@ -53,12 +55,11 @@ export const get = (url, options_ = {}, customOptions = {}) => {
     defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey(), [gatewayEmbedHostHeader]: getEmbedHost() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'GET' }])
-  return fetch(url, options).then((response) => {
-    if (response.ok) {
-      return response.json()
-    }
-    throw response
-  })
+  const response = await fetch(url, options)
+  if (response.ok) {
+    return response.json()
+  }
+  throw response
 }
 
 export const post = (url, data = {}, options_ = {}, customOptions = {}) => {
@@ -85,7 +86,7 @@ export const post = (url, data = {}, options_ = {}, customOptions = {}) => {
   )
 }
 
-export const patch = (url, data = {}, options_ = {}, customOptions = {}) => {
+export const patch = async (url, data = {}, options_ = {}, customOptions = {}) => {
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
@@ -98,15 +99,14 @@ export const patch = (url, data = {}, options_ = {}, customOptions = {}) => {
     defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey(), [gatewayEmbedHostHeader]: getEmbedHost() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'PATCH' }])
-  return fetch(url, options).then((response) => {
-    if (response.ok) {
-      return response.json()
-    }
-    throw response
-  })
+  const response = await fetch(url, options)
+  if (response.ok) {
+    return response.json()
+  }
+  throw response
 }
 
-export const remove = (url, _data = {}, options_ = {}, customOptions = {}) => {
+export const remove = async (url, _data = {}, options_ = {}, customOptions = {}) => {
   const defaultOptions = {
     mode: 'cors',
     cache: 'no-cache',
@@ -118,12 +118,11 @@ export const remove = (url, _data = {}, options_ = {}, customOptions = {}) => {
     defaultOptions.headers = { ...defaultOptions.headers, [gatewayAuthHeader]: getAPIKey(), [gatewayEmbedHostHeader]: getEmbedHost() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'DELETE' }])
-  return fetch(url, options).then((response) => {
-    if (response.ok) {
-      return response.json()
-    }
-    throw response
-  })
+  const response = await fetch(url, options)
+  if (response.ok) {
+    return response.json()
+  }
+  throw response
 }
 
 export const generateJsonRPCObject = (method, parameters) => ({
@@ -134,12 +133,11 @@ export const generateJsonRPCObject = (method, parameters) => ({
 })
 
 export const promiseRace = (url, options, timeout = 30000) => {
-  log.info('promise race', url)
   return Promise.race([
     get(url, options),
     new Promise((resolve, reject) => {
       setTimeout(() => {
-        reject(new Error('timeout'))
+        reject(new Error('timed out'))
       }, timeout)
     }),
   ])
