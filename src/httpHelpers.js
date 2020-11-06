@@ -1,7 +1,4 @@
 import deepmerge from 'deepmerge'
-import loglevel from 'loglevel'
-
-export const log = loglevel.getLogger('http-helpers')
 
 let apiKey = 'torus-default'
 let embedHost = ''

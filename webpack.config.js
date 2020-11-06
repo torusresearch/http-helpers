@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const pkg = require('./package.json')
 
 const pkgName = 'httpHelpers'
@@ -16,22 +17,12 @@ const baseConfig = {
   module: {
     rules: [],
   },
-  node: {
-    vm: 'empty',
-  },
 }
 
 const optimization = {
   optimization: {
     minimize: false,
   },
-}
-
-const eslintLoader = {
-  enforce: 'pre',
-  test: /\.js$/,
-  exclude: /node_modules/,
-  loader: 'eslint-loader',
 }
 
 const babelLoaderWithPolyfills = {
@@ -52,8 +43,9 @@ const cjsConfig = {
     libraryTarget: 'commonjs2',
   },
   module: {
-    rules: [eslintLoader, babelLoader],
+    rules: [babelLoader],
   },
+  plugins: [new ESLintPlugin()],
   externals: [...Object.keys(pkg.dependencies), /^(@babel\/runtime)/i],
 }
 
@@ -66,7 +58,7 @@ const nodeConfig = {
     libraryTarget: 'commonjs2',
   },
   module: {
-    rules: [eslintLoader, babelLoader],
+    rules: [babelLoader],
   },
   externals: [...Object.keys(pkg.dependencies), /^(@babel\/runtime)/i],
   target: 'node',
