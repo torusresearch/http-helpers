@@ -6,12 +6,11 @@
     "prettier/babel",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:flowtype/recommended",
     "plugin:promise/recommended",
     "airbnb-base",
     "prettier"
   ],
-  "plugins": ["prettier", "babel", "standard", "promise", "import", "flowtype", "standard", "simple-import-sort"],
+  "plugins": ["prettier", "babel", "promise", "import", "simple-import-sort"],
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
@@ -19,7 +18,8 @@
   },
   "rules": {
     "no-restricted-syntax": 0,
-    "simple-import-sort/sort": "error",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
     "operator-linebreak": 0,
     "object-curly-newline": 0,
     "semi": [2, "never"],
