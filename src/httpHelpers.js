@@ -71,12 +71,21 @@ export const post = (url, data = {}, options_ = {}, customOptions = {}) => {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
     },
-    body: customOptions.isUrlEncodedData ? data : JSON.stringify(data),
   }
   if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() }
   }
   const options = deepmerge.all([defaultOptions, options_, { method: 'POST' }])
+
+  // deep merge changes the structure of form data and url encoded data ,
+  // so we should not deepmerge body data
+  options.body = customOptions.isUrlEncodedData ? data : JSON.stringify(data)
+  // for multipart request browser/client will add multipart content type
+  // along with multipart boundary , so for multipart request send
+  // content-type: undefined or send with multipart boundary if already known
+  if (options.headers['Content-Type'] === undefined) {
+    delete options.headers['Content-Type']
+  }
   return promiseTimeout(
     customOptions.timeout || 30000,
     fetch(url, options).then((response) => {
