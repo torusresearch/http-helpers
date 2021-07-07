@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 const path = require('path')
 const webpack = require('webpack')
 const ESLintPlugin = require('eslint-webpack-plugin')
