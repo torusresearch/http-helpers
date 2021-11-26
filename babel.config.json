@@ -1,4 +1,5 @@
 {
-  "presets": ["@babel/env"],
-  "plugins": ["@babel/plugin-proposal-object-rest-spread", ["@babel/transform-runtime", { "corejs": { "version": 3 } }]]
+  "presets": ["@babel/env", "@babel/typescript"],
+  "plugins": ["@babel/plugin-proposal-object-rest-spread", "@babel/transform-runtime"],
+  "sourceType": "unambiguous"
 }

@@ -1,76 +1,39 @@
-/* eslint-disable import/no-unresolved */
-const path = require('path')
-const webpack = require('webpack')
-const ESLintPlugin = require('eslint-webpack-plugin')
-const pkg = require('./package.json')
+/* eslint-disable @typescript-eslint/no-var-requires */
+const webpack = require("webpack");
+const pkg = require("./package.json");
 
-const pkgName = 'httpHelpers'
-const libraryName = pkgName.charAt(0).toUpperCase() + pkgName.slice(1)
-
-const baseConfig = {
-  mode: 'production',
-  entry: './src/httpHelpers.js',
-  target: 'web',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    library: libraryName,
-  },
-  module: {
-    rules: [],
-  },
+function camelCase(input) {
+  return input.toLowerCase().replace(/-(.)/g, (_, group1) => group1.toUpperCase());
 }
 
-const optimization = {
+function generatePackageName(name) {
+  const splits = name.split("/");
+  const pkgName = splits[splits.length - 1];
+  const usableName = camelCase(pkgName);
+  return usableName;
+}
+
+const pkgName = generatePackageName(pkg.name);
+
+exports.baseConfig = {};
+
+exports.nodeConfig = {
   optimization: {
     minimize: false,
   },
-}
-
-const babelLoaderWithPolyfills = {
-  test: /\.m?js$/,
-  exclude: /(node_modules|bower_components)/,
-  use: {
-    loader: 'babel-loader',
-  },
-}
-
-const babelLoader = { ...babelLoaderWithPolyfills, use: { loader: 'babel-loader', options: { plugins: ['@babel/transform-runtime'] } } }
-
-const cjsConfig = {
-  ...baseConfig,
   output: {
-    ...baseConfig.output,
-    filename: `${pkgName}.cjs.js`,
-    libraryTarget: 'commonjs2',
-  },
-  module: {
-    rules: [babelLoader],
-  },
-  plugins: [new ESLintPlugin()],
-  externals: [...Object.keys(pkg.dependencies), /^(@babel\/runtime)/i],
-}
-
-const nodeConfig = {
-  ...baseConfig,
-  ...optimization,
-  output: {
-    ...baseConfig.output,
     filename: `${pkgName}-node.js`,
-    libraryTarget: 'commonjs2',
-  },
-  module: {
-    rules: [babelLoader],
+    libraryTarget: "commonjs2",
   },
   externals: [...Object.keys(pkg.dependencies), /^(@babel\/runtime)/i],
-  target: 'node',
+  target: "node",
   plugins: [
     new webpack.ProvidePlugin({
-      fetch: ['node-fetch', 'default'],
+      fetch: ["node-fetch", "default"],
     }),
   ],
-}
+};
 
-module.exports = [cjsConfig, nodeConfig]
 // module.exports = [cjsConfig]
 
 // V5
