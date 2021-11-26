@@ -3,7 +3,10 @@
   "version": "1.4.0",
   "description": "http helpers",
   "main": "dist/httpHelpers.cjs.js",
-  "types": "types/httpHelpers.d.ts",
+  "module": "dist/httpHelpers.esm.js",
+  "unpkg": "dist/httpHelpers.umd.min.js",
+  "jsdelivr": "dist/httpHelpers.umd.min.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "rimraf dist/ && torus-scripts build",
     "prepack": "npm run build",
