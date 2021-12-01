@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import merge from "lodash.merge";
 
+export interface CustomOptions {
+  [key: string]: unknown;
+  useAPIKey?: boolean;
+  isUrlEncodedData?: boolean;
+  timeout?: number;
+}
+
 let apiKey = "torus-default";
 let embedHost = "";
 
@@ -50,7 +57,7 @@ export const promiseTimeout = <T>(ms: number, promise: Promise<T>): Promise<T> =
   return Promise.race<T>([promise, timeout]);
 };
 
-export const get = async (url: string, options_: Record<string, unknown> = {}, customOptions: Record<string, unknown> = {}) => {
+export const get = async <T>(url: string, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
     headers: {},
@@ -61,17 +68,12 @@ export const get = async (url: string, options_: Record<string, unknown> = {}, c
   const options = merge(defaultOptions, options_, { method: "GET" });
   const response = await fetch(url, options);
   if (response.ok) {
-    return response.json();
+    return response.json() as Promise<T>;
   }
   throw response;
 };
 
-export const post = (
-  url: string,
-  data: Record<string, unknown> = {},
-  options_: Record<string, unknown> = {},
-  customOptions: Record<string, unknown> = {}
-) => {
+export const post = <T>(url: string, data: Record<string, unknown> = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
     headers: {
@@ -85,30 +87,25 @@ export const post = (
 
   // deep merge changes the structure of form data and url encoded data ,
   // so we should not deepmerge body data
-  options.body = customOptions.isUrlEncodedData ? data : JSON.stringify(data);
+  options.body = customOptions.isUrlEncodedData ? (data as unknown as string) : JSON.stringify(data);
   // for multipart request browser/client will add multipart content type
   // along with multipart boundary , so for multipart request send
   // content-type: undefined or send with multipart boundary if already known
   if (options.headers["Content-Type"] === undefined) {
     delete options.headers["Content-Type"];
   }
-  return promiseTimeout(
+  return promiseTimeout<T>(
     (customOptions.timeout as number) || 30000,
     fetch(url, options).then((response) => {
       if (response.ok) {
-        return response.json();
+        return response.json() as Promise<T>;
       }
       throw response;
     })
   );
 };
 
-export const patch = async (
-  url: string,
-  data: Record<string, unknown> = {},
-  options_: Record<string, unknown> = {},
-  customOptions: Record<string, unknown> = {}
-) => {
+export const patch = async <T>(url: string, data: Record<string, unknown> = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
     headers: {
@@ -121,7 +118,7 @@ export const patch = async (
   const options = merge(defaultOptions, options_, { method: "PATCH" });
   // deep merge changes the structure of form data and url encoded data ,
   // so we should not deepmerge body data
-  options.body = customOptions.isUrlEncodedData ? data : JSON.stringify(data);
+  options.body = customOptions.isUrlEncodedData ? (data as unknown as string) : JSON.stringify(data);
   // for multipart request browser/client will add multipart content type
   // along with multipart boundary , so for multipart request send
   // content-type: undefined or send with multipart boundary if already known
@@ -130,17 +127,12 @@ export const patch = async (
   }
   const response = await fetch(url, options);
   if (response.ok) {
-    return response.json();
+    return response.json() as Promise<T>;
   }
   throw response;
 };
 
-export const remove = async (
-  url: string,
-  _data: Record<string, unknown> = {},
-  options_: Record<string, unknown> = {},
-  customOptions: Record<string, unknown> = {}
-) => {
+export const remove = async <T>(url: string, _data: Record<string, unknown> = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
     headers: {
@@ -153,7 +145,7 @@ export const remove = async (
   const options = merge(defaultOptions, options_, { method: "DELETE" });
   const response = await fetch(url, options);
   if (response.ok) {
-    return response.json();
+    return response.json() as Promise<T>;
   }
   throw response;
 };
@@ -165,10 +157,10 @@ export const generateJsonRPCObject = (method: string, parameters: unknown) => ({
   params: parameters,
 });
 
-export const promiseRace = (url: string, options: Record<string, unknown>, timeout = 30000) =>
+export const promiseRace = <T>(url: string, options: RequestInit, timeout = 30000) =>
   Promise.race([
-    get(url, options),
-    new Promise((resolve, reject) => {
+    get<T>(url, options),
+    new Promise<T>((resolve, reject) => {
       setTimeout(() => {
         reject(new Error("timed out"));
       }, timeout);
