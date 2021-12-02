@@ -95,7 +95,7 @@ export const post = <T>(url: string, data: Record<string, unknown> = {}, options
     delete options.headers["Content-Type"];
   }
   return promiseTimeout<T>(
-    (customOptions.timeout as number) || 30000,
+    (customOptions.timeout as number) || 60000,
     fetch(url, options).then((response) => {
       if (response.ok) {
         return response.json() as Promise<T>;
@@ -157,7 +157,7 @@ export const generateJsonRPCObject = (method: string, parameters: unknown) => ({
   params: parameters,
 });
 
-export const promiseRace = <T>(url: string, options: RequestInit, timeout = 30000) =>
+export const promiseRace = <T>(url: string, options: RequestInit, timeout = 60000) =>
   Promise.race([
     get<T>(url, options),
     new Promise<T>((resolve, reject) => {
