@@ -1,6 +1,6 @@
 {
   "name": "@toruslabs/http-helpers",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "http helpers",
   "main": "dist/httpHelpers.cjs.js",
   "module": "dist/httpHelpers.esm.js",
