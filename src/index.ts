@@ -90,7 +90,7 @@ export const post = <T>(url: string, data: Data = {}, options_: RequestInit = {}
 
   // deep merge changes the structure of form data and url encoded data ,
   // so we should not deepmerge body data
-  options.body = customOptions.isUrlEncodedData ? (data as unknown as string) : JSON.stringify(data);
+  options.body = customOptions.isUrlEncodedData ? (data as string) : JSON.stringify(data);
   // for multipart request browser/client will add multipart content type
   // along with multipart boundary , so for multipart request send
   // content-type: undefined or send with multipart boundary if already known
@@ -121,7 +121,7 @@ export const patch = async <T>(url: string, data: Data = {}, options_: RequestIn
   const options = merge(defaultOptions, options_, { method: "PATCH" });
   // deep merge changes the structure of form data and url encoded data ,
   // so we should not deepmerge body data
-  options.body = customOptions.isUrlEncodedData ? (data as unknown as string) : JSON.stringify(data);
+  options.body = customOptions.isUrlEncodedData ? (data as string) : JSON.stringify(data);
   // for multipart request browser/client will add multipart content type
   // along with multipart boundary , so for multipart request send
   // content-type: undefined or send with multipart boundary if already known
