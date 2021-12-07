@@ -8,6 +8,9 @@ export interface CustomOptions {
   timeout?: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Data {}
+
 let apiKey = "torus-default";
 let embedHost = "";
 
@@ -73,7 +76,7 @@ export const get = async <T>(url: string, options_: RequestInit = {}, customOpti
   throw response;
 };
 
-export const post = <T>(url: string, data: Record<string, unknown> = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
+export const post = <T>(url: string, data: Data = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
     headers: {
@@ -105,7 +108,7 @@ export const post = <T>(url: string, data: Record<string, unknown> = {}, options
   );
 };
 
-export const patch = async <T>(url: string, data: Record<string, unknown> = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
+export const patch = async <T>(url: string, data: Data = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
     headers: {
@@ -132,7 +135,7 @@ export const patch = async <T>(url: string, data: Record<string, unknown> = {}, 
   throw response;
 };
 
-export const remove = async <T>(url: string, _data: Record<string, unknown> = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
+export const remove = async <T>(url: string, _data: Data = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
     headers: {
