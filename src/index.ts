@@ -83,12 +83,6 @@ export const post = <T>(url: string, data: Data = {}, options_: RequestInit = {}
       "Content-Type": "application/json; charset=utf-8",
     },
   };
-  // for multipart request browser/client will add multipart content type
-  // along with multipart boundary , so for multipart request send
-  // content-type: undefined or send with multipart boundary if already known
-  if (options_.headers["Content-Type"] === undefined) {
-    delete defaultOptions.headers["Content-Type"];
-  }
   if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
   }
@@ -96,7 +90,17 @@ export const post = <T>(url: string, data: Data = {}, options_: RequestInit = {}
 
   // deep merge changes the structure of form data and url encoded data ,
   // so we should not deepmerge body data
-  options.body = customOptions.isUrlEncodedData ? (data as string) : JSON.stringify(data);
+  if (customOptions.isUrlEncodedData) {
+    // for multipart request browser/client will add multipart content type
+    // along with multipart boundary , so for multipart request send
+    // content-type: undefined or send with multipart boundary if already known
+    options.body = data as string;
+    // If url encoded data, this must not be the content type
+    if (options.headers["Content-Type"] === "application/json; charset=utf-8") delete options.headers["Content-Type"];
+  } else {
+    options.body = JSON.stringify(data);
+  }
+
   return promiseTimeout<T>(
     (customOptions.timeout as number) || 60000,
     fetch(url, options).then((response) => {
@@ -118,16 +122,22 @@ export const patch = async <T>(url: string, data: Data = {}, options_: RequestIn
   // for multipart request browser/client will add multipart content type
   // along with multipart boundary , so for multipart request send
   // content-type: undefined or send with multipart boundary if already known
-  if (options_.headers["Content-Type"] === undefined) {
-    delete defaultOptions.headers["Content-Type"];
-  }
   if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
   }
   const options = merge(defaultOptions, options_, { method: "PATCH" });
   // deep merge changes the structure of form data and url encoded data ,
   // so we should not deepmerge body data
-  options.body = customOptions.isUrlEncodedData ? (data as string) : JSON.stringify(data);
+  if (customOptions.isUrlEncodedData) {
+    // for multipart request browser/client will add multipart content type
+    // along with multipart boundary , so for multipart request send
+    // content-type: undefined or send with multipart boundary if already known
+    options.body = data as string;
+    // If url encoded data, this must not be the content type
+    if (options.headers["Content-Type"] === "application/json; charset=utf-8") delete options.headers["Content-Type"];
+  } else {
+    options.body = JSON.stringify(data);
+  }
   const response = await fetch(url, options);
   if (response.ok) {
     return response.json() as Promise<T>;
@@ -135,7 +145,7 @@ export const patch = async <T>(url: string, data: Data = {}, options_: RequestIn
   throw response;
 };
 
-export const remove = async <T>(url: string, _data: Data = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
+export const remove = async <T>(url: string, data: Data = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
     headers: {
@@ -145,13 +155,20 @@ export const remove = async <T>(url: string, _data: Data = {}, options_: Request
   // for multipart request browser/client will add multipart content type
   // along with multipart boundary , so for multipart request send
   // content-type: undefined or send with multipart boundary if already known
-  if (options_.headers["Content-Type"] === undefined) {
-    delete defaultOptions.headers["Content-Type"];
-  }
   if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
   }
   const options = merge(defaultOptions, options_, { method: "DELETE" });
+  if (customOptions.isUrlEncodedData) {
+    // for multipart request browser/client will add multipart content type
+    // along with multipart boundary , so for multipart request send
+    // content-type: undefined or send with multipart boundary if already known
+    options.body = data as string;
+    // If url encoded data, this must not be the content type
+    if (options.headers["Content-Type"] === "application/json; charset=utf-8") delete options.headers["Content-Type"];
+  } else {
+    options.body = JSON.stringify(data);
+  }
   const response = await fetch(url, options);
   if (response.ok) {
     return response.json() as Promise<T>;
