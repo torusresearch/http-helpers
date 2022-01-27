@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import merge from "lodash.merge";
+import logLevel, { levels, LogLevelDesc } from "loglevel";
 
+const log = logLevel.getLogger("http-helpers");
+log.setLevel(levels.INFO);
 export interface CustomOptions {
   [key: string]: unknown;
   useAPIKey?: boolean;
@@ -41,13 +44,23 @@ export function clearAPIKey(): void {
 export function getAPIKey(): string {
   return apiKey;
 }
+
 // #endregion
+
+export function setLogLevel(level: LogLevelDesc) {
+  log.setLevel(level);
+}
 
 function getApiKeyHeaders(): Record<string, string> {
   const headers = {};
   if (apiKey) headers[gatewayAuthHeader] = apiKey;
   if (embedHost) headers[gatewayEmbedHostHeader] = embedHost;
   return headers;
+}
+
+function debugLogResponse(response: Response) {
+  log.info(`Response: ${response.status} ${response.statusText}`);
+  log.info(`Url: ${response.url}`);
 }
 
 export const promiseTimeout = <T>(ms: number, promise: Promise<T>): Promise<T> => {
@@ -73,6 +86,7 @@ export const get = async <T>(url: string, options_: RequestInit = {}, customOpti
   if (response.ok) {
     return response.json() as Promise<T>;
   }
+  debugLogResponse(response);
   throw response;
 };
 
@@ -107,6 +121,7 @@ export const post = <T>(url: string, data: Data = {}, options_: RequestInit = {}
       if (response.ok) {
         return response.json() as Promise<T>;
       }
+      debugLogResponse(response);
       throw response;
     })
   );
@@ -142,6 +157,7 @@ export const patch = async <T>(url: string, data: Data = {}, options_: RequestIn
   if (response.ok) {
     return response.json() as Promise<T>;
   }
+  debugLogResponse(response);
   throw response;
 };
 
@@ -173,6 +189,7 @@ export const remove = async <T>(url: string, data: Data = {}, options_: RequestI
   if (response.ok) {
     return response.json() as Promise<T>;
   }
+  debugLogResponse(response);
   throw response;
 };
 
