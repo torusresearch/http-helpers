@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
+import type { SpanContext, TransactionContext } from "@sentry/types";
 import merge from "lodash.merge";
 import logLevel, { levels, LogLevelDesc } from "loglevel";
-
 const log = logLevel.getLogger("http-helpers");
 log.setLevel(levels.INFO);
 export interface CustomOptions {
@@ -20,6 +20,29 @@ let embedHost = "";
 // #region API Keys
 export const gatewayAuthHeader = "x-api-key";
 export const gatewayEmbedHostHeader = "x-embed-host";
+
+let sentry = {
+  startTransaction: (_: TransactionContext) => {
+    return {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      startChild: (a: SpanContext) => {
+        return {
+          finish: () => {},
+        };
+      },
+      finish: () => {},
+    };
+  },
+};
+
+let tracingOrigins: string[] = [];
+let tracingPaths: string[] = [];
+
+export function enableSentryTracing(_sentry: typeof sentry, _tracingOrigins: string[], _tracingPaths: string[]) {
+  sentry = _sentry;
+  tracingOrigins = [...tracingOrigins, ..._tracingOrigins];
+  tracingPaths = [...tracingPaths, ..._tracingPaths];
+}
 
 export function setEmbedHost(embedHost_: string): void {
   embedHost = embedHost_;
@@ -51,6 +74,26 @@ export function setLogLevel(level: LogLevelDesc) {
   log.setLevel(level);
 }
 
+async function fetchAndTrace(url: string, init: RequestInit): Promise<Response> {
+  const _url = new URL(url);
+  if (tracingOrigins.includes(_url.origin) || tracingPaths.includes(_url.pathname)) {
+    const transaction = sentry.startTransaction({
+      name: url,
+    });
+    const span = transaction.startChild({
+      op: "http",
+    }); // This function returns a Span
+
+    const response = await fetch(url, init);
+    span.finish(); // Remember that only finished spans will be sent with the transaction
+
+    transaction.finish(); // Finishing the transaction will send it to Sentry
+
+    return response;
+  }
+
+  return fetch(url, init);
+}
 function getApiKeyHeaders(): Record<string, string> {
   const headers = {};
   if (apiKey) headers[gatewayAuthHeader] = apiKey;
@@ -82,7 +125,7 @@ export const get = async <T>(url: string, options_: RequestInit = {}, customOpti
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
   }
   const options = merge(defaultOptions, options_, { method: "GET" });
-  const response = await fetch(url, options);
+  const response = await fetchAndTrace(url, options);
   if (response.ok) {
     return response.json() as Promise<T>;
   }
@@ -117,7 +160,7 @@ export const post = <T>(url: string, data: Data = {}, options_: RequestInit = {}
 
   return promiseTimeout<T>(
     (customOptions.timeout as number) || 60000,
-    fetch(url, options).then((response) => {
+    fetchAndTrace(url, options).then((response) => {
       if (response.ok) {
         return response.json() as Promise<T>;
       }
@@ -153,7 +196,7 @@ export const patch = async <T>(url: string, data: Data = {}, options_: RequestIn
   } else {
     options.body = JSON.stringify(data);
   }
-  const response = await fetch(url, options);
+  const response = await fetchAndTrace(url, options);
   if (response.ok) {
     return response.json() as Promise<T>;
   }
@@ -185,7 +228,7 @@ export const remove = async <T>(url: string, data: Data = {}, options_: RequestI
   } else {
     options.body = JSON.stringify(data);
   }
-  const response = await fetch(url, options);
+  const response = await fetchAndTrace(url, options);
   if (response.ok) {
     return response.json() as Promise<T>;
   }
