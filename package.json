@@ -30,7 +30,7 @@
   "devDependencies": {
     "@toruslabs/eslint-config-typescript": "^1.0.0",
     "@toruslabs/torus-scripts": "^1.0.1",
-    "@sentry/types": "^6.19.7",
+    "@sentry/types": "^7.0.0",
     "@types/lodash.merge": "^4.6.7",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
