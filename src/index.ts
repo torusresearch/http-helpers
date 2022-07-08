@@ -21,24 +21,20 @@ let embedHost = "";
 export const gatewayAuthHeader = "x-api-key";
 export const gatewayEmbedHostHeader = "x-embed-host";
 
-let sentry = {
-  startTransaction: (_: TransactionContext) => {
-    return {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      startChild: (a: SpanContext) => {
-        return {
-          finish: () => {},
-        };
-      },
-      finish: () => {},
+interface Sentry {
+  startTransaction(_: TransactionContext): {
+    startChild(a: SpanContext): {
+      finish(): void;
     };
-  },
-};
+    finish(): void;
+  };
+}
 
+let sentry: Sentry | null = null;
 let tracingOrigins: string[] = [];
 let tracingPaths: string[] = [];
 
-export function enableSentryTracing(_sentry: typeof sentry, _tracingOrigins: string[], _tracingPaths: string[]) {
+export function enableSentryTracing(_sentry: Sentry, _tracingOrigins: string[], _tracingPaths: string[]) {
   sentry = _sentry;
   tracingOrigins = [...tracingOrigins, ..._tracingOrigins];
   tracingPaths = [...tracingPaths, ..._tracingPaths];
