@@ -31,13 +31,13 @@ interface Sentry {
 }
 
 let sentry: Sentry | null = null;
-let tracingOrigins: string[] = [];
-let tracingPaths: string[] = [];
+const tracingOrigins: string[] = [];
+const tracingPaths: string[] = [];
 
 export function enableSentryTracing(_sentry: Sentry, _tracingOrigins: string[], _tracingPaths: string[]) {
   sentry = _sentry;
-  tracingOrigins = [...tracingOrigins, ..._tracingOrigins];
-  tracingPaths = [...tracingPaths, ..._tracingPaths];
+  tracingOrigins.push(..._tracingOrigins);
+  tracingPaths.push(..._tracingPaths);
 }
 
 export function setEmbedHost(embedHost_: string): void {
@@ -71,8 +71,11 @@ export function setLogLevel(level: LogLevelDesc) {
 }
 
 async function fetchAndTrace(url: string, init: RequestInit): Promise<Response> {
-  const _url = new URL(url);
-  if (sentry && (tracingOrigins.includes(_url.origin) || tracingPaths.includes(_url.pathname))) {
+  let _url: URL | null = null;
+  try {
+    _url = new URL(url);
+  } catch (error) {}
+  if (sentry && _url && (tracingOrigins.includes(_url.origin) || tracingPaths.includes(_url.pathname))) {
     const transaction = sentry.startTransaction({
       name: url,
     });
