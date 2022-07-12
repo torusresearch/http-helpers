@@ -21,7 +21,8 @@
     "src"
   ],
   "peerDependencies": {
-    "@babel/runtime": "7.x"
+    "@babel/runtime": "7.x",
+    "@sentry/types": "7.x"
   },
   "dependencies": {
     "lodash.merge": "^4.6.2",
