@@ -72,7 +72,7 @@ export function setLogLevel(level: LogLevelDesc) {
 
 async function fetchAndTrace(url: string, init: RequestInit): Promise<Response> {
   const _url = new URL(url);
-  if (tracingOrigins.includes(_url.origin) || tracingPaths.includes(_url.pathname)) {
+  if (sentry && (tracingOrigins.includes(_url.origin) || tracingPaths.includes(_url.pathname))) {
     const transaction = sentry.startTransaction({
       name: url,
     });
