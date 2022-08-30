@@ -203,7 +203,6 @@ export const patch = async <T>(url: string, data: Data = {}, options_: RequestIn
   throw response;
 };
 
-
 export const put = async <T>(url: string, data: Data = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
