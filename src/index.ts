@@ -203,6 +203,41 @@ export const patch = async <T>(url: string, data: Data = {}, options_: RequestIn
   throw response;
 };
 
+
+export const put = async <T>(url: string, data: Data = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
+  const defaultOptions = {
+    mode: "cors" as RequestMode,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  };
+  // for multipart request browser/client will add multipart content type
+  // along with multipart boundary , so for multipart request send
+  // content-type: undefined or send with multipart boundary if already known
+  if (customOptions.useAPIKey) {
+    defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
+  }
+  const options = merge(defaultOptions, options_, { method: "PUT" });
+  // deep merge changes the structure of form data and url encoded data ,
+  // so we should not deepmerge body data
+  if (customOptions.isUrlEncodedData) {
+    // for multipart request browser/client will add multipart content type
+    // along with multipart boundary , so for multipart request send
+    // content-type: undefined or send with multipart boundary if already known
+    options.body = data as string;
+    // If url encoded data, this must not be the content type
+    if (options.headers["Content-Type"] === "application/json; charset=utf-8") delete options.headers["Content-Type"];
+  } else {
+    options.body = JSON.stringify(data);
+  }
+  const response = await fetchAndTrace(url, options);
+  if (response.ok) {
+    return response.json() as Promise<T>;
+  }
+  debugLogResponse(response);
+  throw response;
+};
+
 export const remove = async <T>(url: string, data: Data = {}, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
   const defaultOptions = {
     mode: "cors" as RequestMode,
