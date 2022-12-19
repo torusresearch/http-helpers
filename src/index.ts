@@ -9,6 +9,7 @@ export interface CustomOptions {
   useAPIKey?: boolean;
   isUrlEncodedData?: boolean;
   timeout?: number;
+  logTracingHeader?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -105,6 +106,10 @@ function debugLogResponse(response: Response) {
   log.info(`Url: ${response.url}`);
 }
 
+function logTracingHeader(response: Response) {
+  log.info(`Request tracing with traceID=${response.headers.get("x-web3-correlation-id")}`);
+}
+
 export const promiseTimeout = <T>(ms: number, promise: Promise<T>): Promise<T> => {
   const timeout = new Promise<T>((resolve, reject) => {
     const id = setTimeout(() => {
@@ -160,6 +165,9 @@ export const post = <T>(url: string, data: Data = {}, options_: RequestInit = {}
   return promiseTimeout<T>(
     (customOptions.timeout as number) || 60000,
     fetchAndTrace(url, options).then((response) => {
+      if (customOptions.logTracingHeader) {
+        logTracingHeader(response);
+      }
       if (response.ok) {
         return response.json() as Promise<T>;
       }
