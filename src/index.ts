@@ -2,8 +2,10 @@
 import type { SpanContext, TransactionContext } from "@sentry/types";
 import merge from "lodash.merge";
 import logLevel, { levels, LogLevelDesc } from "loglevel";
+
 const log = logLevel.getLogger("http-helpers");
 log.setLevel(levels.INFO);
+
 export interface CustomOptions {
   [key: string]: unknown;
   useAPIKey?: boolean;
