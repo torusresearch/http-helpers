@@ -13,12 +13,11 @@
 
 ### Bundling
 
-This module is distributed in 4 formats
+This module is distributed in 3 formats
 
 - `esm` build `dist/httpHelpers.esm.js` in es6 format
 - `commonjs` build `dist/httpHelpers.cjs.js` in es5 format
 - `umd` build `dist/httpHelpers.umd.min.js` in es5 format without polyfilling corejs minified
-- `node` build `dist/httpHelpers-node.js` in es5 format
 
 By default, the appropriate format is used for your specified usecase
 You can use a different format (if you know what you're doing eg. node) by referencing the correct file
@@ -54,12 +53,7 @@ import { get, post } from "@toruslabs/http-helpers";
 const { get, post } = require("@toruslabs/http-helpers").default;
 ```
 
-```js
-// For Node.js
-const { get, post } = require("@toruslabs/http-helpers/dist/httpHelpers-node.js").default;
-```
-
 ## Requirements
 
 - This package requires a peer dependency of `@babel/runtime`
-- Node 14+
+- Node 18+
