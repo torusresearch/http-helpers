@@ -14,7 +14,6 @@ export interface CustomOptions {
   logTracingHeader?: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Data {}
 
 let apiKey = "torus-default";
@@ -97,7 +96,7 @@ async function fetchAndTrace(url: string, init: RequestInit): Promise<Response> 
   return fetch(url, init);
 }
 function getApiKeyHeaders(): Record<string, string> {
-  const headers = {};
+  const headers: Record<string, string> = {};
   if (apiKey) headers[gatewayAuthHeader] = apiKey;
   if (embedHost) headers[gatewayEmbedHostHeader] = embedHost;
   return headers;
@@ -113,7 +112,7 @@ function logTracingHeader(response: Response) {
 }
 
 export const promiseTimeout = <T>(ms: number, promise: Promise<T>): Promise<T> => {
-  const timeout = new Promise<T>((resolve, reject) => {
+  const timeout = new Promise<T>((_resolve, reject: (reason?: Error) => void) => {
     const id = setTimeout(() => {
       clearTimeout(id);
       reject(new Error(`Timed out in ${ms}ms`));
@@ -289,7 +288,7 @@ export const generateJsonRPCObject = (method: string, parameters: unknown) => ({
 export const promiseRace = <T>(url: string, options: RequestInit, timeout = 60000) =>
   Promise.race([
     get<T>(url, options),
-    new Promise<T>((resolve, reject) => {
+    new Promise<T>((_resolve, reject) => {
       setTimeout(() => {
         reject(new Error("timed out"));
       }, timeout);
