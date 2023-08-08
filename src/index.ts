@@ -14,7 +14,6 @@ export interface CustomOptions {
   logTracingHeader?: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Data {}
 
 let apiKey = "torus-default";
@@ -97,7 +96,7 @@ async function fetchAndTrace(url: string, init: RequestInit): Promise<Response> 
   return fetch(url, init);
 }
 function getApiKeyHeaders(): Record<string, string> {
-  const headers = {};
+  const headers: Record<string, string> = {};
   if (apiKey) headers[gatewayAuthHeader] = apiKey;
   if (embedHost) headers[gatewayEmbedHostHeader] = embedHost;
   return headers;
@@ -113,7 +112,7 @@ function logTracingHeader(response: Response) {
 }
 
 export const promiseTimeout = <T>(ms: number, promise: Promise<T>): Promise<T> => {
-  const timeout = new Promise<T>((resolve, reject) => {
+  const timeout = new Promise<T>((_resolve, reject) => {
     const id = setTimeout(() => {
       clearTimeout(id);
       reject(new Error(`Timed out in ${ms}ms`));
@@ -133,7 +132,11 @@ export const get = async <T>(url: string, options_: RequestInit = {}, customOpti
   const options = merge(defaultOptions, options_, { method: "GET" });
   const response = await fetchAndTrace(url, options);
   if (response.ok) {
-    return response.json() as Promise<T>;
+    const responseContentType = response.headers.get("content-type");
+    if (responseContentType?.includes("application/json")) {
+      return response.json() as Promise<T>;
+    }
+    return response.text() as Promise<T>;
   }
   debugLogResponse(response);
   throw response;
@@ -171,7 +174,11 @@ export const post = <T>(url: string, data: Data = {}, options_: RequestInit = {}
         logTracingHeader(response);
       }
       if (response.ok) {
-        return response.json() as Promise<T>;
+        const responseContentType = response.headers.get("content-type");
+        if (responseContentType?.includes("application/json")) {
+          return response.json() as Promise<T>;
+        }
+        return response.text() as Promise<T>;
       }
       debugLogResponse(response);
       throw response;
@@ -207,7 +214,11 @@ export const patch = async <T>(url: string, data: Data = {}, options_: RequestIn
   }
   const response = await fetchAndTrace(url, options);
   if (response.ok) {
-    return response.json() as Promise<T>;
+    const responseContentType = response.headers.get("content-type");
+    if (responseContentType?.includes("application/json")) {
+      return response.json() as Promise<T>;
+    }
+    return response.text() as Promise<T>;
   }
   debugLogResponse(response);
   throw response;
@@ -241,7 +252,11 @@ export const put = async <T>(url: string, data: Data = {}, options_: RequestInit
   }
   const response = await fetchAndTrace(url, options);
   if (response.ok) {
-    return response.json() as Promise<T>;
+    const responseContentType = response.headers.get("content-type");
+    if (responseContentType?.includes("application/json")) {
+      return response.json() as Promise<T>;
+    }
+    return response.text() as Promise<T>;
   }
   debugLogResponse(response);
   throw response;
@@ -273,7 +288,11 @@ export const remove = async <T>(url: string, data: Data = {}, options_: RequestI
   }
   const response = await fetchAndTrace(url, options);
   if (response.ok) {
-    return response.json() as Promise<T>;
+    const responseContentType = response.headers.get("content-type");
+    if (responseContentType?.includes("application/json")) {
+      return response.json() as Promise<T>;
+    }
+    return response.text() as Promise<T>;
   }
   debugLogResponse(response);
   throw response;
@@ -289,7 +308,7 @@ export const generateJsonRPCObject = (method: string, parameters: unknown) => ({
 export const promiseRace = <T>(url: string, options: RequestInit, timeout = 60000) =>
   Promise.race([
     get<T>(url, options),
-    new Promise<T>((resolve, reject) => {
+    new Promise<T>((_resolve, reject) => {
       setTimeout(() => {
         reject(new Error("timed out"));
       }, timeout);
