@@ -111,20 +111,22 @@ function logTracingHeader(response: Response) {
   log.info(`Request tracing with traceID=${response.headers.get("x-web3-correlation-id")}`);
 }
 
-export const promiseTimeout = <T>(ms: number, promise: Promise<T>): Promise<T> => {
+export const promiseTimeout = async <T>(ms: number, promise: Promise<T>): Promise<T> => {
   let timeoutFunc: ReturnType<typeof setTimeout> | null = null;
-
-  // clean up timeout and unresolved promises
-  setTimeout(() => {
-    if (timeoutFunc != null) clearTimeout(timeoutFunc);
-  });
 
   const timeout = new Promise<T>((_resolve, reject) => {
     timeoutFunc = setTimeout(() => {
       reject(new Error(`Timed out in ${ms}ms`));
     }, ms);
   });
-  return Promise.race<T>([promise, timeout]);
+
+  const result = await Promise.race<T>([promise, timeout]);
+  // promise.race will return the first resolved promise
+  // then we clear the timeout
+  if (timeoutFunc != null) {
+    clearTimeout(timeoutFunc);
+  }
+  return Promise.resolve(result);
 };
 
 export const get = async <T>(url: string, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
