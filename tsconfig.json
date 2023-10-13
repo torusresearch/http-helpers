@@ -1,4 +1,10 @@
 {
   "extends": "@toruslabs/config/tsconfig.default.json",
-  "include": ["src"]
+  "include": ["src"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "target": "ES2017"
+    }
+  }
 }

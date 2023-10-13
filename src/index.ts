@@ -112,9 +112,15 @@ function logTracingHeader(response: Response) {
 }
 
 export const promiseTimeout = <T>(ms: number, promise: Promise<T>): Promise<T> => {
+  let timeoutFunc: ReturnType<typeof setTimeout> | null = null;
+
+  // clean up timeout and unresolved promises
+  setTimeout(() => {
+    if (timeoutFunc != null) clearTimeout(timeoutFunc);
+  });
+
   const timeout = new Promise<T>((_resolve, reject) => {
-    const id = setTimeout(() => {
-      clearTimeout(id);
+    timeoutFunc = setTimeout(() => {
       reject(new Error(`Timed out in ${ms}ms`));
     }, ms);
   });
