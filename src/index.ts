@@ -126,7 +126,7 @@ export const promiseTimeout = async <T>(ms: number, promise: Promise<T>): Promis
     if (timeoutFunc != null) {
       clearTimeout(timeoutFunc);
     }
-    return Promise.resolve(result);
+    return result;
   } catch (err) {
     // clear the timeout
     if (timeoutFunc != null) {
