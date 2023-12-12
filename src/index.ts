@@ -113,20 +113,28 @@ function logTracingHeader(response: Response) {
 
 export const promiseTimeout = async <T>(ms: number, promise: Promise<T>): Promise<T> => {
   let timeoutFunc: ReturnType<typeof setTimeout> | null = null;
+  try {
+    const timeout = new Promise<T>((_resolve, reject) => {
+      timeoutFunc = setTimeout(() => {
+        reject(new Error(`Timed out in ${ms}ms`));
+      }, ms);
+    });
 
-  const timeout = new Promise<T>((_resolve, reject) => {
-    timeoutFunc = setTimeout(() => {
-      reject(new Error(`Timed out in ${ms}ms`));
-    }, ms);
-  });
-
-  const result = await Promise.race<T>([promise, timeout]);
-  // promise.race will return the first resolved promise
-  // then we clear the timeout
-  if (timeoutFunc != null) {
-    clearTimeout(timeoutFunc);
+    const result = await Promise.race<T>([promise, timeout]);
+    // promise.race will return the first resolved promise
+    // then we clear the timeout
+    if (timeoutFunc != null) {
+      clearTimeout(timeoutFunc);
+    }
+    return Promise.resolve(result);
+  } catch (err) {
+    // clear the timeout
+    if (timeoutFunc != null) {
+      clearTimeout(timeoutFunc);
+    }
+    // rethrow the original error
+    throw err;
   }
-  return Promise.resolve(result);
 };
 
 export const get = async <T>(url: string, options_: RequestInit = {}, customOptions: CustomOptions = {}) => {
