@@ -14,11 +14,10 @@
     "prepack": "npm run build",
     "lint": "eslint --fix 'src/**/*.ts'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "peerDependencies": {
     "@babel/runtime": "^7.x",
@@ -31,18 +30,18 @@
   },
   "dependencies": {
     "lodash.merge": "^4.6.2",
-    "loglevel": "^1.8.1"
+    "loglevel": "^1.9.1"
   },
   "devDependencies": {
-    "@sentry/types": "^7.86.0",
+    "@sentry/types": "^7.105.0",
     "@toruslabs/config": "^2.0.2",
-    "@toruslabs/eslint-config-typescript": "^3.0.3",
-    "@toruslabs/torus-scripts": "^5.1.0",
+    "@toruslabs/eslint-config-typescript": "^3.2.0",
+    "@toruslabs/torus-scripts": "^5.3.0",
     "@types/lodash.merge": "^4.6.9",
-    "eslint": "^8.55.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.1.1",
+    "eslint": "^8.57.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
     "rimraf": "^5.0.5"
   },
   "repository": {
