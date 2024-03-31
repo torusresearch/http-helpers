@@ -108,7 +108,8 @@ function debugLogResponse(response: Response) {
 }
 
 function logTracingHeader(response: Response) {
-  log.info(`Request tracing with traceID=${response.headers.get("x-web3-correlation-id")}`);
+  const tracingHeader = response.headers.get("x-web3-correlation-id");
+  if (tracingHeader) log.info(`Request tracing with traceID = ${tracingHeader}`);
 }
 
 export const promiseTimeout = async <T>(ms: number, promise: Promise<T>): Promise<T> => {
