@@ -33,10 +33,10 @@
     "loglevel": "^1.9.1"
   },
   "devDependencies": {
-    "@sentry/types": "^7.105.0",
+    "@sentry/types": "^7.114.0",
     "@toruslabs/config": "^2.0.2",
     "@toruslabs/eslint-config-typescript": "^3.2.0",
-    "@toruslabs/torus-scripts": "^5.3.0",
+    "@toruslabs/torus-scripts": "^5.3.1",
     "@types/lodash.merge": "^4.6.9",
     "eslint": "^8.57.0",
     "husky": "^9.0.11",
