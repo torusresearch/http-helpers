@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import type { SpanContext, TransactionContext } from "@sentry/types";
+import type { Span, StartSpanOptions } from "@sentry/types";
 import merge from "lodash.merge";
 import logLevel, { levels, LogLevelDesc } from "loglevel";
 
@@ -24,12 +24,7 @@ export const gatewayAuthHeader = "x-api-key";
 export const gatewayEmbedHostHeader = "x-embed-host";
 
 interface Sentry {
-  startTransaction(_: TransactionContext): {
-    startChild(a: SpanContext): {
-      finish(): void;
-    };
-    finish(): void;
-  };
+  startSpan<T>(context: StartSpanOptions, callback: (span: Span) => T): T;
 }
 
 let sentry: Sentry | null = null;
@@ -78,19 +73,17 @@ async function fetchAndTrace(url: string, init: RequestInit): Promise<Response> 
     _url = new URL(url);
   } catch (error) {}
   if (sentry && _url && (tracingOrigins.includes(_url.origin) || tracingPaths.includes(_url.pathname))) {
-    const transaction = sentry.startTransaction({
-      name: url,
-    });
-    const span = transaction.startChild({
-      op: "http",
-    }); // This function returns a Span
-
-    const response = await fetch(url, init);
-    span.finish(); // Remember that only finished spans will be sent with the transaction
-
-    transaction.finish(); // Finishing the transaction will send it to Sentry
-
-    return response;
+    const result = await sentry.startSpan<Promise<Response>>(
+      {
+        name: url,
+        op: "http.client",
+      },
+      async () => {
+        const response = await fetch(url, init);
+        return response;
+      }
+    );
+    return result;
   }
 
   return fetch(url, init);
