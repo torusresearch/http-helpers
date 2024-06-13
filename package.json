@@ -22,7 +22,7 @@
   ],
   "peerDependencies": {
     "@babel/runtime": "^7.x",
-    "@sentry/types": "^7.x"
+    "@sentry/types": "^8.x"
   },
   "peerDependenciesMeta": {
     "@sentry/types": {
