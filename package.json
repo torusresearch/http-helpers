@@ -34,6 +34,7 @@
     "loglevel": "^1.9.1"
   },
   "devDependencies": {
+    "@sentry/node": "^8.9.2",
     "@sentry/types": "^8.9.2",
     "@toruslabs/config": "^2.1.0",
     "@toruslabs/eslint-config-typescript": "^3.3.1",
