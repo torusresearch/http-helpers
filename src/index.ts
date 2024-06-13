@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import type { StartSpanOptions } from "@sentry/types";
+import type { Span, StartSpanOptions } from "@sentry/types";
 import merge from "lodash.merge";
 import logLevel, { levels, LogLevelDesc } from "loglevel";
 
@@ -24,7 +24,7 @@ export const gatewayAuthHeader = "x-api-key";
 export const gatewayEmbedHostHeader = "x-embed-host";
 
 interface Sentry {
-  startSpan(_: StartSpanOptions, callback: () => unknown): unknown;
+  startSpan<T>(context: StartSpanOptions, callback: (span: Span) => T): T;
 }
 
 let sentry: Sentry | null = null;
@@ -73,16 +73,17 @@ async function fetchAndTrace(url: string, init: RequestInit): Promise<Response> 
     _url = new URL(url);
   } catch (error) {}
   if (sentry && _url && (tracingOrigins.includes(_url.origin) || tracingPaths.includes(_url.pathname))) {
-    sentry.startSpan(
+    const result = await sentry.startSpan<Promise<Response>>(
       {
         name: url,
-        op: "http",
+        op: "http.client",
       },
       async () => {
         const response = await fetch(url, init);
         return response;
       }
     );
+    return result;
   }
 
   return fetch(url, init);

@@ -2,6 +2,7 @@
   "name": "@toruslabs/http-helpers",
   "version": "6.1.1",
   "description": "http helpers",
+  "sideEffects": false,
   "main": "dist/lib.cjs/index.js",
   "module": "dist/lib.esm/index.js",
   "unpkg": "dist/httpHelpers.umd.min.js",
