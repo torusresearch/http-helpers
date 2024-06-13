@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import type { Span, StartSpanOptions } from "@sentry/types";
-import merge from "lodash.merge";
+import merge from "deepmerge";
 import logLevel, { levels, LogLevelDesc } from "loglevel";
 
 const log = logLevel.getLogger("http-helpers");
@@ -139,7 +139,8 @@ export const get = async <T>(url: string, options_: RequestInit = {}, customOpti
   if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
   }
-  const options = merge(defaultOptions, options_, { method: "GET" });
+  options_.method = "GET";
+  const options = merge<RequestInit>(defaultOptions, options_);
   const response = await fetchAndTrace(url, options);
   if (response.ok) {
     const responseContentType = response.headers.get("content-type");
@@ -162,7 +163,8 @@ export const post = <T>(url: string, data: Data = {}, options_: RequestInit = {}
   if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
   }
-  const options = merge(defaultOptions, options_, { method: "POST" });
+  options_.method = "POST";
+  const options = merge(defaultOptions, options_);
 
   // deep merge changes the structure of form data and url encoded data ,
   // so we should not deepmerge body data
@@ -209,7 +211,8 @@ export const patch = async <T>(url: string, data: Data = {}, options_: RequestIn
   if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
   }
-  const options = merge(defaultOptions, options_, { method: "PATCH" });
+  options_.method = "PATCH";
+  const options = merge(defaultOptions, options_);
   // deep merge changes the structure of form data and url encoded data ,
   // so we should not deepmerge body data
   if (customOptions.isUrlEncodedData) {
@@ -247,7 +250,8 @@ export const put = async <T>(url: string, data: Data = {}, options_: RequestInit
   if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
   }
-  const options = merge(defaultOptions, options_, { method: "PUT" });
+  options_.method = "PUT";
+  const options = merge(defaultOptions, options_);
   // deep merge changes the structure of form data and url encoded data ,
   // so we should not deepmerge body data
   if (customOptions.isUrlEncodedData) {
@@ -285,7 +289,8 @@ export const remove = async <T>(url: string, data: Data = {}, options_: RequestI
   if (customOptions.useAPIKey) {
     defaultOptions.headers = { ...defaultOptions.headers, ...getApiKeyHeaders() };
   }
-  const options = merge(defaultOptions, options_, { method: "DELETE" });
+  options_.method = "DELETE";
+  const options = merge(defaultOptions, options_);
   if (customOptions.isUrlEncodedData) {
     // for multipart request browser/client will add multipart content type
     // along with multipart boundary , so for multipart request send

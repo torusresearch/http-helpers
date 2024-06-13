@@ -30,7 +30,7 @@
     }
   },
   "dependencies": {
-    "lodash.merge": "^4.6.2",
+    "deepmerge": "^4.3.1",
     "loglevel": "^1.9.1"
   },
   "devDependencies": {
@@ -39,7 +39,6 @@
     "@toruslabs/config": "^2.1.0",
     "@toruslabs/eslint-config-typescript": "^3.3.1",
     "@toruslabs/torus-scripts": "^6.0.1",
-    "@types/lodash.merge": "^4.6.9",
     "eslint": "^8.57.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
