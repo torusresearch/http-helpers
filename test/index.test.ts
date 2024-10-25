@@ -2,7 +2,7 @@ import { Span, StartSpanOptions } from "@sentry/types";
 import logLevel, { levels } from "loglevel";
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 
-import * as httpHelpers from "./index";
+import * as httpHelpers from "../src/index";
 
 interface Sentry {
   startSpan<T>(context: StartSpanOptions, callback: (span: Span) => T): T;

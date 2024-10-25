@@ -6,5 +6,6 @@ export default defineConfig({
     // Add any Vitest-specific configurations here
     globals: true,
     environment: "node",
+    watch: false,
   },
 });
