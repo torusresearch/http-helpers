@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
 import type { Span, StartSpanOptions } from "@sentry/types";
 import merge from "deepmerge";
 import logLevel, { levels, LogLevelDesc } from "loglevel";
@@ -14,6 +13,7 @@ export interface CustomOptions {
   logTracingHeader?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Data {}
 
 let apiKey = "torus-default";
@@ -71,7 +71,9 @@ async function fetchAndTrace(url: string, init: RequestInit): Promise<Response> 
   let _url: URL | null = null;
   try {
     _url = new URL(url);
-  } catch (error) {}
+  } catch {
+    // ignore
+  }
   if (sentry && _url && (tracingOrigins.includes(_url.origin) || tracingPaths.includes(_url.pathname))) {
     const result = await sentry.startSpan<Promise<Response>>(
       {
