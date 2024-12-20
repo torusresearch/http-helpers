@@ -13,7 +13,7 @@
     "build": "torus-scripts build",
     "release": "torus-scripts release",
     "prepack": "npm run build",
-    "lint": "eslint --fix",
+    "lint": "eslint --fix 'src/**/*.ts'",
     "test": "vitest",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
