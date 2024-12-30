@@ -14,9 +14,12 @@
     "release": "torus-scripts release",
     "prepack": "npm run build",
     "lint": "eslint --fix 'src/**/*.ts'",
-    "test": "vitest",
-    "test:watch": "vitest watch",
-    "test:coverage": "vitest run --coverage",
+    "test": "npm run test:node && npm run test:browsers",
+    "test:node": "vitest run --config test/configs/node.config.mts --coverage",
+    "test:chrome": "vitest run --config test/configs/chrome.config.mts",
+    "test:firefox": "vitest run --config test/configs/firefox.config.mts --coverage",
+    "test:safari": "vitest run --config test/configs/safari.config.mts --coverage",
+    "test:browsers": "npm run test:chrome && npm run test:firefox && npm run test:safari",
     "prepare": "husky"
   },
   "files": [
