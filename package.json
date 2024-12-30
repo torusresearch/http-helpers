@@ -41,13 +41,17 @@
     "@toruslabs/config": "^2.2.0",
     "@toruslabs/eslint-config-typescript": "^4.0.0",
     "@toruslabs/torus-scripts": "^7.0.0",
+    "@vitest/browser": "^2.1.8",
+    "@vitest/coverage-istanbul": "^2.1.8",
     "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^9.17.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.11",
+    "lint-staged": "^15.3.0",
+    "playwright": "^1.49.1",
     "prettier": "^3.4.2",
     "rimraf": "^6.0.1",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "vitest-fetch-mock": "^0.4.3"
   },
   "repository": {
     "type": "git",
