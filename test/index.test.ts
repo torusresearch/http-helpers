@@ -8,8 +8,12 @@ interface Sentry {
   startSpan<T>(context: StartSpanOptions, callback: (span: Span) => T): T;
 }
 
-// Mock fetch
-global.fetch = vi.fn();
+import createFetchMock from "vitest-fetch-mock";
+
+const fetchMocker = createFetchMock(vi);
+
+fetchMocker.enableMocks();
+
 const log = logLevel.getLogger("http-helpers");
 
 const mockResponse = (status = 200, data = {}, contentType = "application/json") => {
@@ -67,11 +71,11 @@ describe("HTTP Helpers", () => {
     describe("get", () => {
       it("should make a GET request", async () => {
         const mockData = { test: "data" };
-        (global.fetch as Mock).mockResolvedValue(mockResponse(200, mockData));
+        (fetchMocker as Mock).mockResolvedValue(mockResponse(200, mockData));
 
         const result = await httpHelpers.get("https://api.example.com/data");
         expect(result).toEqual(mockData);
-        expect(global.fetch).toHaveBeenCalledWith("https://api.example.com/data", expect.objectContaining({ method: "GET" }));
+        expect(fetchMocker).toHaveBeenCalledWith("https://api.example.com/data", expect.objectContaining({ method: "GET" }));
       });
     });
 
@@ -79,11 +83,11 @@ describe("HTTP Helpers", () => {
       it("should make a POST request", async () => {
         const mockData = { test: "data" };
         const postData = { postKey: "postValue" };
-        (global.fetch as Mock).mockResolvedValue(mockResponse(200, mockData));
+        (fetchMocker as Mock).mockResolvedValue(mockResponse(200, mockData));
 
         const result = await httpHelpers.post("https://api.example.com/data", postData);
         expect(result).toEqual(mockData);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(fetchMocker).toHaveBeenCalledWith(
           "https://api.example.com/data",
           expect.objectContaining({
             method: "POST",
@@ -97,11 +101,11 @@ describe("HTTP Helpers", () => {
       it("should make a PATCH request", async () => {
         const mockData = { test: "data" };
         const patchData = { patchKey: "patchValue" };
-        (global.fetch as Mock).mockResolvedValue(mockResponse(200, mockData));
+        (fetchMocker as Mock).mockResolvedValue(mockResponse(200, mockData));
 
         const result = await httpHelpers.patch("https://api.example.com/data", patchData);
         expect(result).toEqual(mockData);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(fetchMocker).toHaveBeenCalledWith(
           "https://api.example.com/data",
           expect.objectContaining({
             method: "PATCH",
@@ -115,11 +119,11 @@ describe("HTTP Helpers", () => {
       it("should make a PUT request", async () => {
         const mockData = { test: "data" };
         const putData = { putKey: "putValue" };
-        (global.fetch as Mock).mockResolvedValue(mockResponse(200, mockData));
+        (fetchMocker as Mock).mockResolvedValue(mockResponse(200, mockData));
 
         const result = await httpHelpers.put("https://api.example.com/data", putData);
         expect(result).toEqual(mockData);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(fetchMocker).toHaveBeenCalledWith(
           "https://api.example.com/data",
           expect.objectContaining({
             method: "PUT",
@@ -133,11 +137,11 @@ describe("HTTP Helpers", () => {
       it("should make a DELETE request", async () => {
         const mockData = { test: "data" };
         const deleteData = { deleteKey: "deleteValue" };
-        (global.fetch as Mock).mockResolvedValue(mockResponse(200, mockData));
+        (fetchMocker as Mock).mockResolvedValue(mockResponse(200, mockData));
 
         const result = await httpHelpers.remove("https://api.example.com/data", deleteData);
         expect(result).toEqual(mockData);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(fetchMocker).toHaveBeenCalledWith(
           "https://api.example.com/data",
           expect.objectContaining({
             method: "DELETE",
@@ -149,14 +153,14 @@ describe("HTTP Helpers", () => {
 
     // Add tests for error handling
     it("should throw an error for non-OK responses", async () => {
-      (global.fetch as Mock).mockResolvedValue(mockResponse(404, { error: "Not Found" }));
+      (fetchMocker as Mock).mockResolvedValue(mockResponse(404, { error: "Not Found" }));
 
       await expect(httpHelpers.get("https://api.example.com/data")).rejects.toThrow();
     });
 
     it("should handle non-JSON responses", async () => {
       const textResponse = "Plain text response";
-      (global.fetch as Mock).mockResolvedValue({
+      (fetchMocker as Mock).mockResolvedValue({
         ok: true,
         text: () => Promise.resolve(textResponse),
         headers: new Headers({ "content-type": "text/plain" }),
@@ -168,10 +172,10 @@ describe("HTTP Helpers", () => {
 
     it("should use API key when useAPIKey option is true", async () => {
       httpHelpers.setAPIKey("test-api-key");
-      (global.fetch as Mock).mockResolvedValue(mockResponse(200, {}));
+      (fetchMocker as Mock).mockResolvedValue(mockResponse(200, {}));
 
       await httpHelpers.get("https://api.example.com/data", {}, { useAPIKey: true });
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(fetchMocker).toHaveBeenCalledWith(
         "https://api.example.com/data",
         expect.objectContaining({
           headers: expect.objectContaining({
@@ -183,10 +187,10 @@ describe("HTTP Helpers", () => {
 
     it("should handle URL encoded data", async () => {
       const urlEncodedData = "key1=value1&key2=value2";
-      (global.fetch as Mock).mockResolvedValue(mockResponse(200, {}));
+      (fetchMocker as Mock).mockResolvedValue(mockResponse(200, {}));
 
       await httpHelpers.post("https://api.example.com/data", urlEncodedData, {}, { isUrlEncodedData: true });
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(fetchMocker).toHaveBeenCalledWith(
         "https://api.example.com/data",
         expect.objectContaining({
           body: urlEncodedData,
@@ -215,14 +219,14 @@ describe("HTTP Helpers", () => {
   describe("promiseRace", () => {
     it("should resolve when the request completes before timeout", async () => {
       const mockData = { test: "data" };
-      (global.fetch as Mock).mockResolvedValue(mockResponse(200, mockData));
+      (fetchMocker as Mock).mockResolvedValue(mockResponse(200, mockData));
 
       const result = await httpHelpers.promiseRace("https://api.example.com/data", {}, 1000);
       expect(result).toEqual(mockData);
     });
 
     it("should reject when the request times out", async () => {
-      (global.fetch as Mock).mockImplementation(
+      (fetchMocker as Mock).mockImplementation(
         () =>
           new Promise((resolve) => {
             setTimeout(resolve, 2000);
@@ -235,7 +239,7 @@ describe("HTTP Helpers", () => {
     it("should use the default timeout of 60000ms if not specified", async () => {
       vi.useFakeTimers();
       const mockData = { test: "data" };
-      (global.fetch as Mock).mockResolvedValue(mockResponse(200, mockData));
+      (fetchMocker as Mock).mockResolvedValue(mockResponse(200, mockData));
 
       const promise = httpHelpers.promiseRace("https://api.example.com/data", {});
       vi.advanceTimersByTime(59999);
@@ -255,7 +259,7 @@ describe("HTTP Helpers", () => {
 
       httpHelpers.enableSentryTracing(mockSentry as Sentry, origins, paths);
 
-      (global.fetch as Mock).mockResolvedValue(mockResponse(200, {}));
+      (fetchMocker as Mock).mockResolvedValue(mockResponse(200, {}));
       await httpHelpers.get("https://example.com/api/data");
 
       expect(mockSentry.startSpan).toHaveBeenCalled();
@@ -270,7 +274,7 @@ describe("HTTP Helpers", () => {
 
       httpHelpers.enableSentryTracing(mockSentry as Sentry, origins, paths);
 
-      (global.fetch as Mock).mockResolvedValue(mockResponse(200, {}));
+      (fetchMocker as Mock).mockResolvedValue(mockResponse(200, {}));
       await httpHelpers.get("https://other-domain.com/api/data");
 
       expect(mockSentry.startSpan).not.toHaveBeenCalled();

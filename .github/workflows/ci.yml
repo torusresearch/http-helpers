@@ -30,5 +30,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Install playwright webkit
+        run: npx playwright install-deps webkit
+
       - name: Test
-        run: npm run test
+        run: npx playwright install && npm run test
+

@@ -3,9 +3,12 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    // Add any Vitest-specific configurations here
-    globals: true,
+    reporters: "verbose",
+    coverage: {
+      reporter: ["text"],
+      provider: "istanbul",
+      include: ["src/**/*.ts"],
+    },
     environment: "node",
-    watch: false,
   },
 });

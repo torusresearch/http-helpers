@@ -1,4 +1,4 @@
 {
   "extends": "@toruslabs/config/tsconfig.default.json",
-  "include": ["src", "vitest.config.ts", "test"]
+  "include": ["src", "test"]
 }
