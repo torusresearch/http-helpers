@@ -41,9 +41,9 @@
   "devDependencies": {
     "@sentry/node": "^8.47.0",
     "@sentry/types": "^8.47.0",
-    "@toruslabs/config": "^2.2.0",
-    "@toruslabs/eslint-config-typescript": "^4.0.0",
-    "@toruslabs/torus-scripts": "^7.0.0",
+    "@toruslabs/config": "^3.0.0",
+    "@toruslabs/eslint-config-typescript": "^4.0.2",
+    "@toruslabs/torus-scripts": "^7.0.2",
     "@vitest/browser": "^2.1.8",
     "@vitest/coverage-istanbul": "^2.1.8",
     "eslint": "^9.17.0",
