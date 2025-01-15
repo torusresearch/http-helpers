@@ -12,7 +12,9 @@
 ## Installation
 
 ### Bundling
-This module is provided only in `umd` format
+This module is distributed in 3 formats
+- `lib.esm` build `dist/lib.esm.js` in es6 format
+- `lib.cjs` build `dist/lib.cjs.js` in es5 format
 - `umd` build `dist/httpHelpers.umd.min.js` in es5 format without polyfilling corejs minified
 
 By default, the appropriate format is used for your specified usecase
