@@ -16,10 +16,7 @@
     "lint": "eslint --fix 'src/**/*.ts'",
     "test": "npm run test:node && npm run test:browsers",
     "test:node": "vitest run --config test/configs/node.config.mts --coverage",
-    "test:chrome": "vitest run --config test/configs/chrome.config.mts",
-    "test:firefox": "vitest run --config test/configs/firefox.config.mts --coverage",
-    "test:safari": "vitest run --config test/configs/safari.config.mts --coverage",
-    "test:browsers": "npm run test:chrome && npm run test:firefox && npm run test:safari",
+    "test:browsers": "vitest run --config test/configs/browsers.config.mts --coverage",
     "prepare": "husky"
   },
   "files": [
@@ -39,20 +36,20 @@
     "loglevel": "^1.9.2"
   },
   "devDependencies": {
-    "@sentry/node": "^8.49.0",
-    "@sentry/types": "^8.49.0",
+    "@sentry/node": "^8.50.0",
+    "@sentry/types": "^8.50.0",
     "@toruslabs/config": "^3.0.1",
     "@toruslabs/eslint-config-typescript": "^4.0.4",
     "@toruslabs/torus-scripts": "^7.0.4",
-    "@vitest/browser": "^2.1.8",
-    "@vitest/coverage-istanbul": "^2.1.8",
+    "@vitest/browser": "^3.0.1",
+    "@vitest/coverage-istanbul": "^3.0.1",
     "eslint": "^9.18.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.3.0",
+    "lint-staged": "^15.4.1",
     "playwright": "^1.49.1",
     "prettier": "^3.4.2",
     "rimraf": "^6.0.1",
-    "vitest": "^2.1.8",
+    "vitest": "^3.0.1",
     "vitest-fetch-mock": "^0.4.3"
   },
   "repository": {
