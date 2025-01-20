@@ -7,8 +7,12 @@ export default defineConfig({
       screenshotFailures: false,
       headless: true,
       provider: "playwright",
-      name: "chromium",
       enabled: true,
+      instances: [
+        { name: "Chrome", browser: "chromium" },
+        { name: "Firefox", browser: "firefox" },
+        { name: "Safari", browser: "webkit" },
+      ],
     },
     coverage: {
       reporter: ["text"],
