@@ -74,6 +74,9 @@
       "prettier --write"
     ]
   },
+  "overrides": {
+    "esbuild": "^0.25.0"
+  },
   "engines": {
     "node": ">=20.x",
     "npm": ">=9.x"
