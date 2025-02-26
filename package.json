@@ -36,20 +36,20 @@
     "loglevel": "^1.9.2"
   },
   "devDependencies": {
-    "@sentry/node": "^9.1.0",
-    "@sentry/types": "^9.1.0",
+    "@sentry/node": "^9.2.0",
+    "@sentry/types": "^9.2.0",
     "@toruslabs/config": "^3.0.1",
     "@toruslabs/eslint-config-typescript": "^4.0.4",
     "@toruslabs/torus-scripts": "^7.0.4",
-    "@vitest/browser": "^3.0.6",
-    "@vitest/coverage-istanbul": "^3.0.6",
-    "eslint": "^9.20.1",
+    "@vitest/browser": "^3.0.7",
+    "@vitest/coverage-istanbul": "^3.0.7",
+    "eslint": "^9.21.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
     "playwright": "^1.50.1",
-    "prettier": "^3.5.1",
+    "prettier": "^3.5.2",
     "rimraf": "^6.0.1",
-    "vitest": "^3.0.6",
+    "vitest": "^3.0.7",
     "vitest-fetch-mock": "^0.4.3"
   },
   "repository": {
