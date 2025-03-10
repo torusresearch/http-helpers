@@ -23,34 +23,28 @@
     "dist"
   ],
   "peerDependencies": {
-    "@babel/runtime": "^7.x",
-    "@sentry/types": "^8.x"
-  },
-  "peerDependenciesMeta": {
-    "@sentry/types": {
-      "optional": true
-    }
+    "@babel/runtime": "^7.x"
   },
   "dependencies": {
     "deepmerge": "^4.3.1",
     "loglevel": "^1.9.2"
   },
   "devDependencies": {
-    "@sentry/node": "^9.2.0",
-    "@sentry/types": "^9.2.0",
+    "@sentry/node": "^9.5.0",
+    "@sentry/types": "^9.5.0",
     "@toruslabs/config": "^3.1.0",
     "@toruslabs/eslint-config-typescript": "^4.1.0",
-    "@toruslabs/torus-scripts": "^7.1.1",
-    "@vitest/browser": "^3.0.7",
-    "@vitest/coverage-istanbul": "^3.0.7",
-    "eslint": "^9.21.0",
+    "@toruslabs/torus-scripts": "^7.1.2",
+    "@vitest/browser": "^3.0.8",
+    "@vitest/coverage-istanbul": "^3.0.8",
+    "eslint": "^9.22.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
-    "playwright": "^1.50.1",
-    "prettier": "^3.5.2",
+    "playwright": "^1.51.0",
+    "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
-    "vitest": "^3.0.7",
-    "vitest-fetch-mock": "^0.4.4"
+    "vitest": "^3.0.8",
+    "vitest-fetch-mock": "^0.4.5"
   },
   "repository": {
     "type": "git",
