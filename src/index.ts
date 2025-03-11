@@ -1,4 +1,4 @@
-import type * as Sentry from "@sentry/core";
+import type { startSpan } from "@sentry/core";
 import merge from "deepmerge";
 import logLevel, { levels, LogLevelDesc } from "loglevel";
 
@@ -16,6 +16,10 @@ export interface CustomOptions {
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Data {}
 
+export interface Sentry {
+  startSpan: typeof startSpan;
+}
+
 let apiKey = "torus-default";
 let embedHost = "";
 
@@ -23,11 +27,11 @@ let embedHost = "";
 export const gatewayAuthHeader = "x-api-key";
 export const gatewayEmbedHostHeader = "x-embed-host";
 
-let sentry: typeof Sentry | null = null;
+let sentry: Sentry | null = null;
 const tracingOrigins: string[] = [];
 const tracingPaths: string[] = [];
 
-export function enableSentryTracing(_sentry: typeof Sentry, _tracingOrigins: string[], _tracingPaths: string[]) {
+export function enableSentryTracing(_sentry: Sentry, _tracingOrigins: string[], _tracingPaths: string[]) {
   sentry = _sentry;
   tracingOrigins.push(..._tracingOrigins);
   tracingPaths.push(..._tracingPaths);
