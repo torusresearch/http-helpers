@@ -1,4 +1,4 @@
-import type { Span, StartSpanOptions } from "@sentry/types";
+import type * as Sentry from "@sentry/core";
 import merge from "deepmerge";
 import logLevel, { levels, LogLevelDesc } from "loglevel";
 
@@ -23,15 +23,11 @@ let embedHost = "";
 export const gatewayAuthHeader = "x-api-key";
 export const gatewayEmbedHostHeader = "x-embed-host";
 
-interface Sentry {
-  startSpan<T>(context: StartSpanOptions, callback: (span: Span) => T): T;
-}
-
-let sentry: Sentry | null = null;
+let sentry: typeof Sentry | null = null;
 const tracingOrigins: string[] = [];
 const tracingPaths: string[] = [];
 
-export function enableSentryTracing(_sentry: Sentry, _tracingOrigins: string[], _tracingPaths: string[]) {
+export function enableSentryTracing(_sentry: typeof Sentry, _tracingOrigins: string[], _tracingPaths: string[]) {
   sentry = _sentry;
   tracingOrigins.push(..._tracingOrigins);
   tracingPaths.push(..._tracingPaths);

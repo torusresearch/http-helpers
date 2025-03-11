@@ -23,15 +23,15 @@
     "dist"
   ],
   "peerDependencies": {
-    "@babel/runtime": "^7.x"
+    "@babel/runtime": "^7.x",
+    "@sentry/core": "^9.x"
   },
   "dependencies": {
     "deepmerge": "^4.3.1",
     "loglevel": "^1.9.2"
   },
   "devDependencies": {
-    "@sentry/node": "^9.5.0",
-    "@sentry/types": "^9.5.0",
+    "@sentry/core": "^9.5.0",
     "@toruslabs/config": "^3.1.0",
     "@toruslabs/eslint-config-typescript": "^4.1.0",
     "@toruslabs/torus-scripts": "^7.1.2",
